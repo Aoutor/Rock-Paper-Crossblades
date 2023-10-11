@@ -59,10 +59,6 @@ public class Main {
                 //Tie
                 win = 2;
             }
-            if (c_choice == rock && p_choice == crossblades){
-                //Lose
-                win = 0;
-            }
             if (c_choice == rock && p_choice == paper){
                 //Win
                 win = 1;
