@@ -7,99 +7,53 @@ Block 1-2
  */
 
 import java.util.Scanner;
+import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
-        final int rock = 1;
-        final int paper = 2;
-        final int crossblades = 3;
-        int p_choice = 0;
-        int c_choice = 0;
-        boolean playing = true;
-        int win = 0;
-        /*
-        Win = 0 (Lose)
-        Win = 1 (Win)
-        Win = 2 (Tie)
-         */
-        String players = "";
-        String computer = "";
-        Scanner player = new Scanner(System.in);
-        System.out.println("Human, let’s have an epic game of Rock, Paper, Crossblades! \nChoose a move: ");
-        String choice1 = player.nextLine();
-        if (choice1.length()>=0){
-            if (choice1.toLowerCase().lastIndexOf("rock") == choice1.length()-4){
-                p_choice = rock;
-            } else if (choice1.toLowerCase().lastIndexOf("paper") == choice1.length()-5) {
-                p_choice = paper;
-            } else if (choice1.toLowerCase().lastIndexOf("crossblades") == choice1.length()-11) {
-                p_choice = crossblades;
-            }
-        } else {
-            System.out.println("Error");
-            playing = false;
-        }
-        if (choice1.length()<=50 && playing){
-            //Makes player lose if move is under 50 characters
-            if (p_choice == rock){
-                c_choice = paper;
-            }
-            if (p_choice == paper){
-                c_choice = crossblades;
-            }
-            if (p_choice == crossblades){
-                c_choice = rock;
-            }
+        final String[] moves = {"rock", "paper", "crossblades"};
+        Scanner scanner = new Scanner(System.in);
+        Random random = new Random();
 
-            win = 0;
+        System.out.println("Choose rock, paper, or crossblades:");
+        String playerMove = scanner.nextLine().toLowerCase().trim();
+        int playerChoice = getChoice(playerMove, moves);
 
-        } else if (choice1.length()>=50 && playing){
-            c_choice = (int)(Math.random()*3 + 1);
-            if (c_choice == p_choice){
-                //Tie
-                win = 2;
+        if (playerChoice == -1) {
+            System.out.println("Invalid input, please try again.");
+            return;
+        }
+
+        int computerChoice = random.nextInt(3);
+        System.out.println("Computer chose: " + moves[computerChoice]);
+
+        int result = determineWinner(playerChoice, computerChoice);
+        printResult(result);
+    }
+
+    private static int getChoice(String move, String[] moves) {
+        for (int i = 0; i < moves.length; i++) {
+            if (moves[i].equals(move)) {
+                return i;
             }
-            if (c_choice == rock && p_choice == paper){
-                //Win
-                win = 1;
-            }
-            if (c_choice == paper && p_choice == crossblades){
-                //win
-                win = 1;
-            }
-            if (c_choice == crossblades && p_choice == rock){
-                //win
-                win = 1;
-            }
         }
-        //--------------------
-        if (p_choice == rock){
-            players = "rock";
-        }
-        if (p_choice == paper){
-            players = "paper";
-        }
-        if (p_choice == crossblades){
-            players = "crossblades";
-        }
-        if (c_choice == rock){
-            computer = "rock";
-        }
-        if (c_choice == paper){
-            computer = "paper";
-        }
-        if (c_choice == crossblades){
-            computer = "crossblades";
-        }
-        //--------------------
-        if (win == 0){
-            System.out.println("You chose: " + players + "\nComputer chose: " + computer + "\nYou lose! Hahahahaha, the kingdom is mine!");
-        } else if (win == 1){
-            System.out.println("You chose: " + players + "\nComputer chose: " + computer + "\nYou win! The day has been saved!");
-        } else if (win == 2){
-            System.out.println("You chose: " + players + "\nComputer chose: " + computer + "\nYou tied! Impossible!");
-        } else {
-            System.out.println("Error");
+        return -1; // Invalid choice
+    }
+
+    private static int determineWinner(int player, int computer) {
+        if (player == computer) return 2; // Tie
+        if ((player == 0 && computer == 1) || 
+            (player == 1 && computer == 2) || 
+            (player == 2 && computer == 0)) return 0; // Loss
+        return 1; // Win
+    }
+
+    private static void printResult(int result) {
+        switch (result) {
+            case 0 -> System.out.println("You lose!");
+            case 1 -> System.out.println("You win!");
+            case 2 -> System.out.println("It's a tie!");
         }
     }
 }
+
